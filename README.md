@@ -19,13 +19,16 @@ cd cc-tools && ./install.sh
 
 ### `ccs` — Claude Code Search
 
-Grep across **all** Claude Code sessions on this machine, pick one in fzf,
-and resume it — in one command.
+You remember discussing something with Claude — an error message, a library,
+a ticket, a decision — but not *which* session or *which* project it was in.
+`ccs` greps across **all** Claude Code sessions on this machine, lets you
+pick the right one in fzf, and resumes it — in one command.
 
 ```bash
-ccs pipedream     # search every session for "pipedream" (rg smart-case regex)
-ccs "INC-866"     # any ripgrep regex works
-ccs               # no pattern: browse all sessions, newest first
+ccs "connection timeout"   # find the session where you debugged that error
+ccs useReducer             # ...or discussed that API (rg smart-case regex)
+ccs "JIRA-1234"            # ...or worked that ticket
+ccs                        # no pattern: browse all sessions, newest first
 ```
 
 What it does:
