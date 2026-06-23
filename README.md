@@ -1,4 +1,4 @@
-# cc-tools
+# claude-code-search
 
 Personal CLI helpers for [Claude Code](https://claude.com/claude-code).
 
