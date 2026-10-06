@@ -1,31 +1,26 @@
 #!/usr/bin/env bash
-# Install cc-tools: symlink every script in bin/ into ~/.local/bin.
-# Symlinks (not copies) so a `git pull` in this repo updates the live commands.
+# Install claude-code-search: build the Rust binary and symlink it into ~/.local/bin.
+# A symlink (not a copy) means `git pull && ./install.sh` updates the live command.
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="$HOME/.local/bin"
 
 # --- dependency check --------------------------------------------------------
-missing=()
-for dep in rg fzf jq claude; do
-  command -v "$dep" >/dev/null || missing+=("$dep")
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+command -v cargo >/dev/null || {
+  echo "cargo is required: curl https://sh.rustup.rs -sSf | sh" >&2
+  exit 1
+}
+for dep in fzf claude; do
+  command -v "$dep" >/dev/null || echo "Missing runtime dependency: $dep (brew install fzf; claude: https://claude.com/claude-code)" >&2
 done
-if [[ ${#missing[@]} -gt 0 ]]; then
-  echo "Missing dependencies: ${missing[*]}" >&2
-  echo "  brew install ripgrep fzf jq" >&2
-  echo "  claude: https://claude.com/claude-code" >&2
-  # Don't hard-fail — still install, tools will error helpfully at runtime
-fi
 
-# --- symlink scripts ----------------------------------------------------------
+# --- build and link -----------------------------------------------------------
+cargo build --release --manifest-path "$REPO_DIR/Cargo.toml"
 mkdir -p "$TARGET_DIR"
-for script in "$REPO_DIR"/bin/*; do
-  name="$(basename "$script")"
-  chmod +x "$script"
-  ln -sfn "$script" "$TARGET_DIR/$name"
-  echo "linked: $TARGET_DIR/$name -> $script"
-done
+ln -sfn "$REPO_DIR/target/release/ccs" "$TARGET_DIR/ccs"
+echo "linked: $TARGET_DIR/ccs -> $REPO_DIR/target/release/ccs"
 
 # --- PATH check ---------------------------------------------------------------
 case ":$PATH:" in
@@ -38,4 +33,4 @@ case ":$PATH:" in
 esac
 
 echo ""
-echo "Done. Try: ccs <pattern>"
+echo "Done. Try: ccs <query>"
