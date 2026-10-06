@@ -5,7 +5,7 @@ Personal CLI helpers for [Claude Code](https://claude.com/claude-code).
 ## Install
 
 ```bash
-git clone https://github.com/tstanmay13/claude-code-search.git
+git clone https://github.com/tstanmay13/claude-code-search-.git
 cd claude-code-search && ./install.sh
 ```
 
