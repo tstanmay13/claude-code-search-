@@ -1,0 +1,22 @@
+[package]
+name = "ccs"
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.84"
+resolver = "3"
+description = "Claude Code Search: ranked search over local Claude Code sessions, resume via fzf"
+
+[dependencies]
+bincode = "1"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+memchr = "2"
+rayon = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+lto = true
+codegen-units = 1
